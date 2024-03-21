@@ -192,7 +192,7 @@ class Config:
 
     def parse_config(self):
         """Loads the configuration from the configuration file and stores the values in the Config object."""
-        config = self.read_yaml(raise_on_error=True)
+        config = self.read_yaml()
 
         for key, value in config.items():
             if not getattr(self, key):  # Only overwrite None not args
@@ -224,17 +224,13 @@ class Config:
                 getpass.getuser(),
             )
 
-    def read_yaml(self, raise_on_error=False):
-        """Reads the configuration from a YAML file."""
+    def read_yaml(self):
+        """Reads the configuration from a YAML file. If the file does not exist or is empty, it returns an empty dictionary."""
         config = {}
-        try:
-            with open(os.path.expanduser(self.writepath)) as file:
+        filename = os.path.expanduser(self.writepath)
+        if os.path.exists(filename):
+            with open(filename) as file:
                 config = yaml.load(file, Loader=yaml.FullLoader)
-            LOG.info(f"YAML loaded config: {config}")
-        except (yaml.parser.ParserError, yaml.scanner.ScannerError) as e:
-            LOG.error(f"Error parsing config file; invalid YAML. Error: {e}")
-            if raise_on_error:
-                raise
         return config
 
     @staticmethod
