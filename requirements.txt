@@ -1,0 +1,9 @@
+beautifulsoup4
+boto3
+colorlog
+configparser
+keyring
+PyYAML
+requests
+pyotp
+botocore
